@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+        html,body{width: 100%;height: 100%;padding:0;margin:0;overflow: hidden;}
+        img{
+            position: relative;
+            left:0px;
+            /*border:1px solid #ccc;*/
+        }
+        div{
+            position: absolute;
+        }
+        span{
+            position: absolute;
+            z-index: 2;
+            display: block;
+            width: 100px;
+            height:50px;
+            font-size: 40px;
+            line-height: 50px;
+            text-align: center;
+        }
+        </style>
+    </head>
+    <body>
+    <span id="sp"></span>
+    <img src="bird.gif" height="50" width="100" alt="" style="top:0px;left:0px;"/>
+    <script type="text/javascript">
+        var img=document.getElementsByTagName('img')[0]
+        var date=new Date()
+        var endDate=new Date()
+        //上升和下降速度
+        var z=6
+        //难度系数
+        var ld=0.02
+        //口扩张大小
+        var dx=80
+        //柱子间隔
+        var jg=500
+        //////
+        var gg=0
+        var jg_j=jg
+        var ld1=0
+        var p=1
+
+       // rediv()
+       //小鸟下落
+        var t=setInterval(function(){
+            if(!gg){
+                if(p){
+                    img.style.top=parseInt(img.style.top)+z+'px'
+                }else{
+                    img.style.top=parseInt(img.style.top)-z+'px'
+                }
+            }else{
+                clearInterval(t)
+            }
+            move()
+            pz()
+        },30)
+        //分数刷新
+        var f=setInterval(function(){
+            if(!gg){
+                endDate=new Date()
+                var l=parseInt((endDate-date)/100)
+                    l=l%10?l/10:l/10+'.0'
+                document.getElementById('sp').innerHTML=l+'秒';
+
+            }else{
+                clearInterval(f)
+            }
+        },1)
+        document.onkeydown=function(e){
+            // console.log(e.keyCode)
+                p=0
+        }
+        document.onkeyup =function(e){
+                p=1
+        }
+        function pz(){
+            // console.log(img.style.top)
+            if(!gg){var div =document.getElementsByTagName('div')
+                for(var i=0;i<div.length;i++){
+                    //鸟左上角碰撞
+                    if(img.offsetTop>div[i].offsetTop &&
+                        img.offsetTop<div[i].offsetTop+div[i].offsetHeight &&
+                        img.offsetLeft>div[i].offsetLeft &&
+                        img.offsetLeft<div[i].offsetLeft+div[i].offsetWidth
+                        ){
+                        console.log('碰撞',1)
+                             
+                        gg=1
+                        alert('gg')
+                        }
+                    //鸟右上角碰撞
+                    if(img.offsetTop>div[i].offsetTop &&
+                        img.offsetTop<div[i].offsetTop+div[i].offsetHeight &&
+                        img.offsetLeft+img.offsetWidth>div[i].offsetLeft &&
+                        img.offsetLeft+img.offsetWidth<div[i].offsetLeft+div[i].offsetWidth
+                        ){
+                        console.log('碰撞',2)
+                        gg=1
+                        alert('gg')
+                        }
+                    //鸟左下角碰撞
+                    if(img.offsetTop+img.offsetHeight>div[i].offsetTop &&
+                        img.offsetTop+img.offsetHeight<div[i].offsetTop+div[i].offsetHeight &&
+                        img.offsetLeft>div[i].offsetLeft &&
+                        img.offsetLeft<div[i].offsetLeft+div[i].offsetWidth
+                        ){
+                        console.log('碰撞',3)
+                        gg=1
+                        alert('gg')
+                        }
+                    //鸟右下角碰撞
+                    if(img.offsetTop+img.offsetHeight>div[i].offsetTop &&
+                        img.offsetTop+img.offsetHeight<div[i].offsetTop+div[i].offsetHeight &&
+                        img.offsetLeft+img.offsetWidth>div[i].offsetLeft &&
+                        img.offsetLeft+img.offsetWidth<div[i].offsetLeft+div[i].offsetWidth
+                        ){
+                        console.log('碰撞',4)
+                        gg=1
+                        alert('gg')
+                        }
+                    
+                    
+                }
+                //顶
+                if(img.offsetTop<0){gg=1;alert('gg')}
+                //底
+                if(img.offsetTop+img.offsetHeight>window.innerHeight){gg=1;alert('gg')}
+            }
+            
+        }
+        function rediv(){
+            var zh=window.innerHeight-img.offsetHeight-dx-100
+            var rand=parseInt(Math.random()*10)/10
+            var h=zh*rand
+            var div=document.createElement('div')
+                div.style.height=h-20+50+'px'
+                div.style.width='100px'
+                div.style.top='0px'
+                div.style.left=window.innerWidth+'px'
+                div.style.backgroundColor='#61DF0D'
+                document.body.appendChild(div)
+
+                div=document.createElement('div')
+                div.style.height=zh-h-20+50+'px'
+                div.style.width='100px'
+                div.style.bottom='0px'
+                div.style.left=window.innerWidth+'px'
+                div.style.backgroundColor='#61DF0D'
+                document.body.appendChild(div)
+        }
+        function move(){
+            var div=document.getElementsByTagName('div')
+            ld1+=ld
+            var z=5+ld1
+            // console.log(ld1)
+            for(var i=0;i<div.length;i++){
+                div[i].style.left=parseInt(div[i].style.left)-z+'px'
+            }
+            //删除不能与移动同时进行,div是引用!!!删除元素后对象集合div也会改变.导致跳过后一个元素的情况
+            for(var i=0;i<div.length;i++){
+                if(parseInt(div[i].style.left)<-200){
+                    //删除 left小于-200的div
+                    div[i].parentNode.removeChild(div[i])
+                    console.log('清除');
+                }
+            }
+            if(jg_j>=jg){
+                jg_j=0
+                rediv();
+                console.log('创建');
+            }
+            jg_j+=z
+        }
+    </script>
+    </body>
+</html>
