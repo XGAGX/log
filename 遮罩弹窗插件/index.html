@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            p{padding: 0;margin:0;}
+            ul{width: 300px;height:300px;}
+            .div{background:#999;border-radius: 10px;background:#fff;padding:10px 10px;border:1px solid #242424;overflow:hidden;}
+            .title{font-weight: bold;font-size: 20px;line-height: 25px;text-align: center;border-bottom: 1px solid #999;}
+            .btn{margin:0 15px;text-align: center;}
+            .end{display:block;font-size: 16px;color:#999;text-decoration: none;position: absolute;top:0;right:0;}
+            .end:hover{background:red;}
+        </style>
+    </head>
+    <body>
+        <button>弹出</button>
+        <script  src="js/jquery-3.3.1.js"></script>
+        <script  src="pop-ups.js"></script>
+        <script type="text/javascript">
+        // 方法pop_ups_hide()移除窗口
+        // 方法pop_ups_show(obj)显示窗口
+            // obj.title//标题,可选
+            // obj.windowsClass//窗口的类名,可选
+            // obj.titleClass,//标题的类名,可选
+            // obj.content,//内容HTML,可选
+            // obj.buttonName,//按钮名称有几个值创建几个按钮,数组['xxx','000'],可选
+            // obj.buttonClass//按钮的类名.可选
+            // obj.buttonFn//按钮被单击时调用的方法fn(e,'xxx').可选  
+            //             //第一个参数为jq事件对象第二个参数为被单击的按钮字串
+            // obj.endClass//右上角那个关闭按钮类名
+        $(()=>{
+            $('button').on('click',()=>{
+                var con=`<ul>
+                    <li>方法pop_ups_hide()移除窗口</li>
+                    <li>方法pop_ups_show(obj)显示窗口</li>
+                    <li></li>
+                    <li></li>
+                    </ul>`;
+                $('body').pop_ups_show({
+                    windowsClass:'div',
+                    titleClass:'title',
+                    title:'这个是标题',
+                    content:con,
+                    endClass:'end',
+                    buttonClass:'btn',
+                    buttonName:['按钮','可以','自定义'],
+                    buttonFn:(e,s)=>{console.log(e,s)
+                        s=='自定义'?$('body').pop_ups_hide():alert('你单击了:'+s);
+                    }
+                })
+            })
+        })
+        </script>
+    </body>
+</html>
